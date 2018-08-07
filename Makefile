@@ -1,5 +1,5 @@
 .PHONY: default all build config clean
-VERSION := 0.1.0
+VERSION := 0.1.1
 COMMIT := $(shell git describe --always)
 GOOS ?= linux
 GOARCH ?= arm

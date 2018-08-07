@@ -149,7 +149,7 @@ func generateDownlinkMessage(response *DDRResponse) (*lora.DownlinkMessage, erro
 
 	downlink := lora.DownlinkMessage{
 		Port:      1,
-		Confirmed: false,
+		Confirmed: true,
 		Payload:   buffer.Bytes(),
 	}
 
