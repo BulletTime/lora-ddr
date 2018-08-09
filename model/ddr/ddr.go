@@ -80,8 +80,12 @@ func getUplinkMessage(payload []byte) (*lora.UplinkMessage, error) {
 	return &uplink, nil
 }
 
-func isValidDDRRequest(payload []byte) bool {
-	strPayload := string(payload)
+func isValidDDRRequest(uplink *lora.UplinkMessage) bool {
+	if uplink.Port != 1 {
+		return false
+	}
+
+	strPayload := string(uplink.Payload)
 
 	if !(strings.HasPrefix(strPayload, DDRHEADER) && strings.Contains(strPayload, SEPARATOR)) {
 		return false
@@ -149,7 +153,7 @@ func generateDownlinkMessage(response *DDRResponse) (*lora.DownlinkMessage, erro
 
 	downlink := lora.DownlinkMessage{
 		Port:      1,
-		Confirmed: true,
+		Confirmed: false,
 		Payload:   buffer.Bytes(),
 	}
 
@@ -178,7 +182,7 @@ func MessageHandler(_ paho.Client, message paho.Message) {
 		return
 	}
 
-	if !isValidDDRRequest(uplink.Payload) {
+	if !isValidDDRRequest(uplink) {
 		log.WithFields(log.Fields{
 			"topic":  message.Topic(),
 			"uplink": uplink,
